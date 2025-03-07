@@ -4,16 +4,16 @@ import { S3 } from "@aws-sdk/client-s3"
 
 // Create S3 client outside of the handler to avoid recreating it on each request
 const s3 = new S3({
-  region: process.env.AWS_REGION || "us-east-1",
+  region: process.env.AWS_REGION ,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "AKIAXBEULIHOZFPMCYHP",
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "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",
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "" ,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY|| "" ,
   },
   // Explicitly disable loading credentials from shared files
   credentialDefaultProvider: () => async () => {
     return {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID || "AKIAXBEULIHOZFPMCYHP",
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "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",
+      accessKeyId: process.env.AWS_ACCESS_KEY_ID|| "" ,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY|| "" ,
     }
   },
 })
