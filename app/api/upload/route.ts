@@ -43,7 +43,9 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer)
 
     // Generate a unique filename
-    const fileName = `videos/${uuidv4()}.webm`
+    const uid=uuidv4()
+    const fileName = `videos/${uid}.webm`
+    
 
     // Upload to S3
     await s3.putObject({
@@ -55,11 +57,11 @@ export async function POST(request: NextRequest) {
     })
 
     // Generate the URL
-    const fileUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`
-
+    //const fileUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`
+    const final = `https://www.deblangy.com/?v=${uid}`
     return NextResponse.json({
       success: true,
-      url: fileUrl,
+      url: final,
     })
   } catch (error: any) {
     console.error("Error uploading to S3:", error)

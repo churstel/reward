@@ -229,7 +229,7 @@ export default function VideoRecorder() {
           <div className="p-3 bg-green-50 rounded-md space-y-2">
             <div className="text-green-700 font-medium">Video uploaded successfully!</div>
             <div className="text-sm break-all">
-              <span className="font-medium">URL:</span> {uploadedUrl}
+              <a href= {uploadedUrl} target="_blank" rel="noreferrer noopener" className="underline">{uploadedUrl}</a>
             </div>
             <Button
               variant="outline"
@@ -259,7 +259,7 @@ export default function VideoRecorder() {
                 Record Again
               </Button>
               <Button onClick={handleUpload} className="flex-1" disabled={isUploading}>
-                {isUploading ? "Uploading..." : "Upload Video"}
+                {isUploading ? "Uploading..." : "Get your link"}
               </Button>
             </div>
           </div>
