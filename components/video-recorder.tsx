@@ -198,7 +198,7 @@ export default function VideoRecorder() {
     <Card className="w-full pt-6">
       
       <CardContent className="space-y-4">
-        <div className="relative bg-black rounded-md overflow-hidden ">
+        <div className="relative bg-black rounded-md overflow-hidden aspect-[9/16]">
           <video ref={videoRef} className="w-full h-full object-cover" playsInline muted={isRecording} />
 
           {isRecording && (
