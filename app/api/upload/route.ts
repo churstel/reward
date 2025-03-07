@@ -21,8 +21,8 @@ const s3 = new S3({
 export async function POST(request: NextRequest) {
   try {
     // Get environment variables
-    const region = process.env.AWS_REGION || "us-east-1"
-    const bucketName = process.env.AWS_S3_BUCKET_NAME || "angelxyz"
+    const region = process.env.AWS_REGION || ""
+    const bucketName = process.env.AWS_S3_BUCKET_NAME || ""
 
     // Validate environment variables
     if (!region || !bucketName) {
