@@ -33,7 +33,10 @@ export default function VideoRecorder() {
       setUploadedUrl(null)
 
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
+        video: { 
+          facingMode: "user",
+          aspectRatio: 9.0 / 16.0,
+         },
         audio: true,
       })
 
@@ -192,12 +195,10 @@ export default function VideoRecorder() {
   }, [videoUrl])
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle>Your Video Message</CardTitle>
-      </CardHeader>
+    <Card className="w-full pt-6">
+      
       <CardContent className="space-y-4">
-        <div className="relative bg-black rounded-md overflow-hidden aspect-video">
+        <div className="relative bg-black rounded-md overflow-hidden ">
           <video ref={videoRef} className="w-full h-full object-cover" playsInline muted={isRecording} />
 
           {isRecording && (
