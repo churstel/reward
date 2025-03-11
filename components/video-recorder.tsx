@@ -215,13 +215,25 @@ export default function VideoRecorder() {
   }, [videoUrl])
 
   return (
-    <Card className="w-full pt-6">
+    <Card className="w-full pt-6 border-0 shadow-none">
       
       <CardContent className="space-y-4">
         <div className="relative bg-black rounded-md overflow-hidden aspect-[9/16]">
-          
-            <video ref={videoRef} className="w-full h-full object-cover" playsInline muted={isRecording} />
-          
+          <video ref={videoRef} className="w-full h-full object-cover bg-slate-400" playsInline muted={isRecording} />
+          {!isRecording && !videoBlob && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <div><h2 className="text-lg text-white text-center m-4">Refer a Friend. Get 15% Off! 🎉</h2>
+              <p className="text-center text-sm text-white m-6">
+        As soon your friend will make a purchase, you will receive a 15% discount code.
+        </p>
+        
+              </div>
+              <div><Button onClick={startRecording} disabled={isRecording} className={cn("opacity-100")}>
+                <Camera className="mr-2 h-4 w-4 animate-pulse" />
+                {isRecording ? "Recording..." : "Start Recording"}
+              </Button></div>
+            </div>
+          )}
           {isRecording && (
             <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm flex items-center">
               <span className="animate-pulse mr-1">●</span>
@@ -250,7 +262,7 @@ export default function VideoRecorder() {
           <div className="p-3 bg-green-50 rounded-md space-y-2">
             <div className="text-green-700 font-medium">Video uploaded successfully!</div>
             <div className="text-sm break-all">
-              <a href= {uploadedUrl} target="_blank" rel="noreferrer noopener" className="underline">{uploadedUrl}</a>
+              <a href={uploadedUrl} target="_blank" rel="noreferrer noopener" className="underline">{uploadedUrl}</a>
             </div>
             <Button
               variant="outline"
@@ -265,13 +277,10 @@ export default function VideoRecorder() {
             </Button>
           </div>
         )}
-      </CardContent>
-      <CardFooter className="flex justify-between">
+      
+      <div className="flex justify-between">
         {!videoBlob ? (
-          <Button onClick={startRecording} disabled={isRecording} className={cn("w-full", isRecording && "opacity-50")}>
-            <Camera className="mr-2 h-4 w-4" />
-            {isRecording ? "Recording..." : "Start Recording"}
-          </Button>
+          <div/>
         ) : (
           <div className="w-full space-y-2">
             <div className="flex gap-2">
@@ -279,9 +288,10 @@ export default function VideoRecorder() {
                 <RefreshCw className="mr-2 h-4 w-4" />
                 Record Again
               </Button>
-              <Button onClick={handleUpload} className="flex-1" disabled={isUploading}>
+              {!uploadedUrl && (<Button id="loaded" onClick={handleUpload} className="flex-1" disabled={isUploading}>
                 {isUploading ? "Uploading..." : "Get your link"}
-              </Button>
+              </Button>)}
+              
             </div>
           </div>
         )}
@@ -290,12 +300,13 @@ export default function VideoRecorder() {
           <Button
             variant="destructive"
             onClick={stopRecording}
-            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 rounded-full w-12 h-12 p-0"
+            className="absolute bottom-4 left-1/2 transform -translate-x-1/2 rounded-full w-12 h-12 p-0 animate-pulse"
           >
             <StopCircle className="h-6 w-6" />
           </Button>
         )}
-      </CardFooter>
+        </div>
+      </CardContent>
     </Card>
   )
 }
