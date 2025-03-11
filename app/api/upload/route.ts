@@ -43,9 +43,9 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(arrayBuffer)
 
     // Generate a unique filename
-    const uid=uuidv4()
+    const uid = uuidv4()
     const fileName = `videos/${uid}.webm`
-    
+    const mp4 = `videos/${uid}.mp4`
 
     // Upload to S3
     await s3.putObject({
@@ -56,6 +56,15 @@ export async function POST(request: NextRequest) {
       ACL: "public-read",
     })
 
+    // Upload MP4 to S3
+    await s3.putObject({
+      Bucket: bucketName,
+      Key: mp4,
+      Body: buffer,
+      ContentType: "video/mp4",
+      ACL: "public-read",
+    })
+
     // Generate the URL
     //const fileUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`
     const final = `https://www.deblangy.com/?v=${uid}`
@@ -63,9 +72,9 @@ export async function POST(request: NextRequest) {
       success: true,
       url: final,
     })
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error uploading to S3:", error)
-    return NextResponse.json({ error: `Failed to upload video: ${error.message}` }, { status: 500 })
+    return NextResponse.json({ error: `Failed to upload video: ${(error as Error).message}` }, { status: 500 })
   }
 }
 

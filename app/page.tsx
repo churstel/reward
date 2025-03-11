@@ -13,9 +13,9 @@ export default function Home() {
         <div className="mt-4 text-sm text-muted-foreground">
           <h2 className="font-medium mb-2">How it works:</h2>
           <ol className="list-decimal pl-5 space-y-1">
-            <li>Click "Start Recording" to access your camera</li>
+            <li>Click &quot;Start Recording&quot; to access your camera</li>
             <li>Record your message (max 20 seconds)</li>
-            <li>Click "Get your link"</li>
+            <li>Click &quot;Get your link&quot;</li>
             <li>Spread on your world</li>
           </ol>
         </div>

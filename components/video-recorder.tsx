@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Camera, StopCircle, RefreshCw } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -18,6 +18,7 @@ export default function VideoRecorder() {
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
+  const [isVideoAvailable, setIsVideoAvailable] = useState(false)
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -31,6 +32,12 @@ export default function VideoRecorder() {
     try {
       setError(null)
       setUploadedUrl(null)
+
+      // Vérifiez si navigator.mediaDevices est défini
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        console.error("getUserMedia is not supported in this browser")
+        return
+      }
 
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { 
@@ -62,11 +69,16 @@ export default function VideoRecorder() {
         const url = URL.createObjectURL(blob)
         setVideoBlob(blob)
         setVideoUrl(url)
-
+        setIsVideoAvailable(true)
+        
         if (videoRef.current) {
           videoRef.current.srcObject = null
           videoRef.current.src = url
           videoRef.current.controls = true
+        
+          videoRef.current.onloadeddata = () => {
+            videoRef.current?.play()
+          }
         }
 
         if (streamRef.current) {
@@ -87,16 +99,17 @@ export default function VideoRecorder() {
           return prev + 1
         })
       }, 1000)
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error("Error accessing camera:", err)
-      if (err.name === "NotAllowedError") {
+      if (err instanceof Error && err.name === "NotAllowedError") {
         setError("Camera access denied. Please allow camera access and try again.")
-      } else if (err.name === "NotFoundError") {
+      } else if (err instanceof Error && err.name === "NotFoundError") {
         setError("No camera found. Please connect a camera and try again.")
-      } else if (err.name === "NotReadableError") {
+      } else if ((err as Error).name === "NotReadableError") {
         setError("Camera is in use by another application. Please close other apps using the camera.")
       } else {
-        setError(`Could not access camera: ${err.message || "Unknown error"}`)
+        const errorMessage = err instanceof Error ? err.message : "Unknown error"
+        setError(`Could not access camera: ${errorMessage}`)
       }
     }
   }
@@ -109,6 +122,10 @@ export default function VideoRecorder() {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== "inactive") {
       mediaRecorderRef.current.stop()
     }
+    
+    
+
+    
 
     setIsRecording(false)
   }
@@ -123,6 +140,7 @@ export default function VideoRecorder() {
     setRecordingTime(0)
     setError(null)
     setUploadedUrl(null)
+    setIsVideoAvailable(false)
 
     if (videoRef.current) {
       videoRef.current.controls = false
@@ -169,9 +187,11 @@ export default function VideoRecorder() {
 
       setUploadProgress(100)
       setUploadedUrl(data.url)
-    } catch (err: any) {
+
+    } catch (err: unknown) {
       console.error("Error uploading video:", err)
-      setError(`Upload failed: ${err.message || "Unknown error"}`)
+      const errorMessage = err instanceof Error ? err.message : "Unknown error"
+      setError(`Upload failed: ${errorMessage}`)
       setUploadProgress(0)
     } finally {
       setIsUploading(false)
@@ -199,8 +219,9 @@ export default function VideoRecorder() {
       
       <CardContent className="space-y-4">
         <div className="relative bg-black rounded-md overflow-hidden aspect-[9/16]">
-          <video ref={videoRef} className="w-full h-full object-cover" playsInline muted={isRecording} />
-
+          
+            <video ref={videoRef} className="w-full h-full object-cover" playsInline muted={isRecording} />
+          
           {isRecording && (
             <div className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-md text-sm flex items-center">
               <span className="animate-pulse mr-1">●</span>
