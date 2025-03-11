@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Camera, StopCircle, RefreshCw } from "lucide-react"
 import { cn } from "@/lib/utils"
@@ -18,7 +18,7 @@ export default function VideoRecorder() {
   const [isUploading, setIsUploading] = useState(false)
   const [uploadProgress, setUploadProgress] = useState(0)
   const [error, setError] = useState<string | null>(null)
-  const [isVideoAvailable, setIsVideoAvailable] = useState(false)
+  // const [isVideoAvailable, setIsVideoAvailable] = useState(false)
 
   const videoRef = useRef<HTMLVideoElement>(null)
   const streamRef = useRef<MediaStream | null>(null)
@@ -43,7 +43,9 @@ export default function VideoRecorder() {
         video: { 
           facingMode: "user",
           aspectRatio: 9.0 / 16.0,
-         },
+          width: { ideal: 720 },
+          height: { ideal: 1280 },
+        },
         audio: true,
       })
 
@@ -69,7 +71,7 @@ export default function VideoRecorder() {
         const url = URL.createObjectURL(blob)
         setVideoBlob(blob)
         setVideoUrl(url)
-        setIsVideoAvailable(true)
+        // setIsVideoAvailable(true)
         
         if (videoRef.current) {
           videoRef.current.srcObject = null
@@ -140,7 +142,7 @@ export default function VideoRecorder() {
     setRecordingTime(0)
     setError(null)
     setUploadedUrl(null)
-    setIsVideoAvailable(false)
+    // setIsVideoAvailable(false)
 
     if (videoRef.current) {
       videoRef.current.controls = false
