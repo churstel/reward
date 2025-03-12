@@ -3,7 +3,6 @@
 import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
-import { Camera, StopCircle, RefreshCw } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Loader2 } from "lucide-react"
@@ -66,7 +65,7 @@ export default function VideoRecorder() {
         if (err instanceof Error && err.name === "OverconstrainedError") {
           const fallbackStream = await navigator.mediaDevices.getUserMedia({
             video: true,
-            audio: false
+            audio: true
           })
           streamRef.current = fallbackStream
           if (videoRef.current) {
