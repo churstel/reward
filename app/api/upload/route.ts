@@ -66,11 +66,13 @@ export async function POST(request: NextRequest) {
     })
 
     // Generate the URL
-    //const fileUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`
+    const fileUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`
     const final = `https://www.deblangy.com/?v=${uid}`
     return NextResponse.json({
       success: true,
-      url: final,
+      url: fileUrl,
+      final: final,
+      uid: uid,
     })
   } catch (error: unknown) {
     console.error("Error uploading to S3:", error)

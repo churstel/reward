@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { StopCircle } from "lucide-react"
 import { useEffect, useState } from "react"
